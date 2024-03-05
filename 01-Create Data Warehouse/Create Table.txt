@@ -1,0 +1,40 @@
+CREATE TABLE DimCustomer (
+	CustomerID int NOT NULL,
+	CustomerName varchar (64),
+	Address varchar (64),
+	CityName varchar (64),
+	StateName varchar (64),
+	Age varchar (3),
+	Gender varchar (64),
+	Email varchar (64),
+	CONSTRAINT PK_DimCustomer PRIMARY KEY (CustomerID)
+)
+
+CREATE TABLE DimAccount (
+	AccountID int NOT NULL,
+	CustomerID int,
+	AccountType varchar (64),
+	Balance int,
+	DateOpened DATE,
+	Status varchar (64),
+	CONSTRAINT PK_DimAccount PRIMARY KEY (AccountID)
+)
+
+CREATE TABLE DimBranch (
+	BranchID int NOT NULL,
+	BranchName varchar (64),
+	BranchLocation varchar (64),
+	CONSTRAINT PK_DimBranch PRIMARY KEY (BranchID)
+)
+
+CREATE TABLE FactTransaction (
+	TransactionID int NOT NULL,
+	AccountID int NOT NULL,
+	BranchID int NOT NULL,
+	TransactionDate DATE ,
+	Amount int ,
+	TransactionType varchar (64)  ,
+	CONSTRAINT PK_FactTransaction PRIMARY KEY (TransactionID),
+	CONSTRAINT FK_FactTransactionA FOREIGN KEY (AccountID) REFERENCES DimAccount (AccountID),
+	CONSTRAINT FK_FactTransactionB FOREIGN KEY (BranchID) REFERENCES DimBranch (BranchID)
+)
