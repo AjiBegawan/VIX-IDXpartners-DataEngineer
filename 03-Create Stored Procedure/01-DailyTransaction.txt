@@ -1,0 +1,12 @@
+CREATE PROCEDURE dbo.DailyTransaction
+	@start_date date,
+	@end_date date
+AS
+	SELECT 
+		TransactionDate AS Date,
+		COUNT (TransactionID) AS TotalTransactions,
+		SUM (Amount) AS TotalAmount
+	FROM dbo.FactTransaction
+	WHERE TransactionDate >= @start_date AND TransactionDate <= @end_date
+	GROUP BY TransactionDate;
+GO
