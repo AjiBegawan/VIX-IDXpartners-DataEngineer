@@ -1,0 +1,2 @@
+EXEC dbo.BalancePerCustomer @name = 'Shelly'
+GO
