@@ -1,0 +1,43 @@
+WITH CombineTables (
+	transaction_id,
+	customer_name,
+	transaction_date,
+	account_type,
+	balance,
+	amount,
+	transaction_type,
+	status,
+	StatusBalance
+) AS (
+	SELECT 
+	tra.transaction_id,
+	cus.customer_name,
+	tra.transaction_date,
+	acc.account_type,
+	acc.balance,
+	tra.amount,
+	tra.transaction_type,
+	acc.status,
+	CASE 
+		WHEN tra.transaction_type = 'deposit' THEN 1
+		ELSE 0
+	END AS StatusBalance
+	FROM dbo.transaction_db AS tra
+	JOIN dbo.account AS acc
+		ON tra.account_id = acc.account_id
+	JOIN dbo.customer AS cus
+		ON acc.customer_id = cus.customer_id
+	WHERE acc.status = 'active'
+	)
+
+SELECT 
+	customer_name,
+	account_type, 
+	balance,
+	CASE 
+		WHEN StatusBalance = 1 THEN MAX(balance) + SUM(amount) 
+		ELSE MAX(balance) - SUM(amount) 
+	END AS CurrentBalance
+FROM CombineTables
+WHERE customer_name LIKE 'shelly%'
+GROUP BY StatusBalance, account_type,  customer_name, balance
